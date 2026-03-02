@@ -3,7 +3,7 @@ Notes and course material for MATH50003 Numerical Analysis (2025–26)
 
 Lecturer: [Dr Sheehan Olver](https://www.ma.imperial.ac.uk/~solver/)
 
-Office hour: Thursdays 2pm, Huxley 6M40
+Office hour: Thursdays 2pm, Fridays 11am, Huxley 6M40
 
 ## [Notes](https://github.com/Imperial-MATH50003/MATH50003NumericalAnalysis/raw/main/notes/notes.pdf)
 
@@ -54,7 +54,7 @@ directly examined in the computer-based or final exam, though they may give good
 
 ## Revision
 
-1. Revision Lab
+1. [Revision Lab](https://github.com/Imperial-MATH50003/MATH50003NumericalAnalysis/blob/main/labs/labr.ipynb)
 2. Revision Sheet
 
 ## Assessment
