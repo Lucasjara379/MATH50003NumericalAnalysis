@@ -1,0 +1,273 @@
+**Numerical Analysis MATH50003 (2025–26) Problem Sheet 9**
+
+We explore some properties of discrete convolution, its relationship to
+continuous convolution of periodic functions, and cross-correlation. We also investigate the Chebyshev U polynomials,
+which are closely related to Chebyshev T polynomials.
+
+
+We saw in the notes that discrete convolutions can be diagonalised in terms of the Discrete Fourier Transform (DFT).
+Here we use this property to prove two basic results:
+
+
+------
+
+
+**Problem 1** Use the connection with the DFT to prove the following properties of convolutions for $𝐟,𝐠,𝐡 ∈ ℂ^n$:
+1. _Commutativity_: $𝐟 ⋆ 𝐠 = 𝐠 ⋆ 𝐟$.
+2. _Associativity_: $(𝐟 ⋆ 𝐠) ⋆ 𝐡 = 𝐟 ⋆ (𝐠 ⋆ 𝐡)$.
+
+**SOLUTION**
+
+It follows directly from the relationship with the DFT and the fact that ${\rm diag}(Q_n 𝐟) Q_n 𝐠 = {\rm diag}(Q_n 𝐠) Q_n 𝐟$:
+$$
+\meeq{
+𝐟 ⋆ 𝐠 = Q_n^⋆ {\rm diag}(Q_n 𝐟) Q_n 𝐠 = Q_n^⋆ {\rm diag}(Q_n 𝐠) Q_n 𝐟 = 𝐠 ⋆ 𝐟 \ccr
+(𝐟 ⋆ 𝐠) ⋆ 𝐡 =  Q_n^⋆ {\rm diag}(Q_n Q_n^⋆ {\rm diag}(Q_n 𝐟) Q_n 𝐠) Q_n 𝐡 \ccr
+= Q_n^⋆ {\rm diag}(Q_n 𝐟) {\rm diag}(Q_n 𝐠) Q_n 𝐡
+= Q_n^⋆ {\rm diag}(Q_n 𝐟) Q_n Q_n^⋆ {\rm diag}(Q_n 𝐠) Q_n 𝐡  \ccr
+= 𝐟 ⋆ (𝐠 ⋆ 𝐡).
+}
+$$
+
+**END**
+
+
+-----
+
+For 2π-periodic functions $a,f$ we have a continuous periodic convolution given by
+$$
+a ⋆ f := {1 \over 2π} ∫_0^{2π}  a(θ-φ) f(φ) \D φ.
+$$
+Note the standard continuous convolution involves an integral over $ℝ$ but because the functions
+do not decay that no longer makes sense. A natural way to discretise this integral is to use the
+Trapezium rule. Here we see how this can be related to the discrete convolution and the error understood
+in terms of the true Fourier coefficients.
+
+
+
+-----
+
+**Problem 2**  For $2π$-periodic smooth functions $a$ and $f$ (i.e., such that $a(θ+2π) = a(θ)$
+and $b(θ+2π) = b(θ)$) with no negative Fourier coefficients ($0 = â_{-1} = â_{-2} = …$ and $0 = f̂_{-1} = f̂_{-2} = …$ )
+consider the periodic Trapezium rule approximation to the (continuous) convolution:
+$$
+\underbrace{ {1 \over 2π} ∫_0^{2π}  a(θ-φ) f(φ) \D φ}_{=: (a ⋆ f)(θ)} ≈ \underbrace{∑_{j=0}^{n-1} a(θ-θ_j) f(θ_j)}_{
+=: (a ⋆_n f)(θ)}
+$$
+for $θ_j = 2πj/n$.
+Express the Fourier coefficients of $a ⋆_n f$  in terms of $â_k$ and $f̂_k$ and thereby prove uniform convergence
+as $n → ∞$ provided both $a$ and $f$ have absolutely summable Fourier coefficients.
+Hint: Integrals and infinite sums can be swapped due to uniform and absolute convergence.
+
+**SOLUTION**
+
+
+Note that
+$$
+∑_{k,j=0}^∞ |â_k| |f̂_j| =  ∑_{k=0}^∞ |f̂_k| ∑_{j=0}^∞ |â_j| = \|𝐚̂\|_1 \| 𝐟̂\|_1
+$$
+which allows us to interchange infinite sums.
+The true convolution satisfies (using uniform convergence to swap integrals and sums):
+$$
+(a ⋆ f)(θ) = ∑_{k=0}^∞  f̂_k ∫_0^{2π} a(θ-φ) \E^{\I k φ} \D φ =  ∑_{j=0}^∞ â_j \E^{\I j θ}   ∑_{k=0}^∞ f̂_k \underbrace{∫_0^{2π} \E^{-I j φ} \E^{\I k φ} \D φ}_{=δ_{kj}}  = ∑_{k=0}^∞ f̂_k â_k \E^{\I k θ}.
+$$
+Note that this has absolutely summable Fourier coefficients  since:
+$$
+∑_{k=0}^∞ |f̂_k â_k| ≤ ∑_{k=0}^∞ |f̂_k| ∑_{j=0}^∞ |â_j| = \|𝐚̂\|_1 \| 𝐟̂\|_1.
+$$
+
+We can similarly write
+$$
+\meeq{
+(a ⋆_n f)(θ)  = ∑_{j=0}^{n-1} ∑_{k=0}^∞ â_k E^{\I k (θ-θ_j)} f(θ_j)
+=  ∑_{k=0}^∞ E^{\I k θ} â_k \underbrace{∑_{j=0}^{n-1}  E^{-\I k θ_j} f(θ_j)}_{f̂_k^n}.
+}
+$$
+That is, its Fourier coefficients are given by, for $c := a ⋆_n f$,
+$$
+ĉ_k = â_k f̂_k^n = â_k ∑_{p=0}^∞ f̂_{\mod(k,n)+pn}
+$$
+
+
+We thus deduce
+$$
+\begin{align*}
+|a ⋆_n f - a ⋆ f| &≤ ∑_{k=0}^∞ |ĉ_k - â_k f̂_k| \ccr
+= ∑_{k=0}^{n-1} \br[|â_k| (|f̂_{k+n}| + f̂_{k+2n}| + …) +
+ (|â_{k+n}| + |â_{k+2n}| + …) (|f̂_k| + |f̂_{k+n}| + …)]\\
+ & ≤
+ \| 𝐚̂ \|_1 ∑_{k=0}^{n-1}  ∑_{p=1}^∞ |f̂_{k+pn}| + \|𝐟̂\|_1 ∑_{k=0}^{n-1}  ∑_{p=1}^∞ |â_{k+pn}| \ccr
+ = \| 𝐚̂ \|_1 ∑_{j=n}^∞ |f̂_j| + \|𝐟̂\|_1 ∑_{j=n}^∞ |â_j|.
+\end{align*}
+$$
+Both sums go to zero as $n → ∞$ since they are absolutely summable.
+
+
+**END**
+
+
+
+-----
+
+Convolutional Neural Networks (CNNs) are typically defined in terms of _cross-correlation_ instead of convolution:
+given two real vectors $𝐚 = [a_0,…,a_{n-1}]^⊤$ and $𝐟 = [f_0,…,f_{n-1}]^⊤$, the _cross-correlation_ is defined by $𝐚 ⊗ 𝐟 = [c_0,…,c_{n-1}]^⊤$ where
+$$
+c_k := ∑_{j=0}^{n-1} a_j f_{{\rm mod}(j+k,n)}.
+$$
+Cross-correlations can be interpreted as a heuristic means to identify when two vectors are close to being shifted versions of each other.
+Here we explore how the cross-correlation is equivalent to a convolution:
+
+-----
+
+**Problem 3** 
+Explain why cross-correlation commutes with translations in the sense that $S(𝐚 ⊗ 𝐟 ) = a ⊗ (S𝐟)$, which guarantees its equivalent to
+a convolution. For what $𝐛$
+do we have
+$$
+𝐚 ⊗ 𝐟  = 𝐛 ⋆ 𝐟?
+$$
+
+**SOLUTION**
+Here we find (using 0-based indexing):
+$$
+𝐞_k S(𝐚 ⊗ 𝐟 ) = 𝐞_{\mod(k-1,n)} (𝐚 ⊗ 𝐟 ) = ∑_{j=0}^{n-1} a_j f_{\mod(j+k-1,n)} = 𝐚 ⊗ S 𝐟.
+$$
+Thus it must be equivalent to a convolution, i.e., a Circulant matrix. We can test on $𝐞_0$ to figure out what the first column is:
+$$
+𝐚 ⊗ 𝐞_0 = \underbrace{\Vectt[
+a_0,
+a_{n-1},
+⋮,
+a_1
+]}_{=: 𝐛}.
+$$
+Note that $C[𝐛] = C[𝐚]^⊤$.
+
+**END**
+
+
+-------
+
+We now move on to Chebyshev polynomials, which are a canonical example of orthogonal polynomials and allow us to use the approximation power of Fourier series for non-periodic functions. In the notes we investigated the standard Chebyshev polynomials $T_n(x) = \cos n \acos x$. Here we investigate a second kind of Chebyshev polynomials:
+$$
+U_n(x) := {\sin(n+1) \acos x \over \sqrt{1-x^2}}.
+$$
+These correspond to
+sine expansions in a similar way to how $T_n$ correspond to cosine expansions. We will show they are orthogonal
+polynomials by proving that they are (1) polynomials and (2) orthogonal with respect to a specific inner product.
+
+We show first  that they are polynomials by proving they satisfy a three-term recurrence (a property satisfied by all orthogonal polynomials).
+
+------
+
+
+**Problem 4(a)** Show that $U_n$ are polynomials that satisfy
+$$
+\begin{align*}
+U_0(x) &= 1, \\
+x U_0(x) &= U_1(x)/2, \\
+x U_n(x) &= {U_{n-1}(x)+U_{n+1}(x) \over 2}, \qquad n > 0.
+\end{align*}
+$$
+Use this to deduce $U_5(x)$.
+
+**SOLUTION**
+
+Note that we can write $x = \cos θ$ where $0 ≤ θ ≤ π$ so that
+$$
+\sqrt{1-x^2} = \sqrt{1-\cos^2 θ} = \sin θ.
+$$
+ Thus
+$$
+U_0(\cos θ) = {\sin θ \over \sin θ} = 1
+$$
+hence $U_0(x) = 1$. For the second property we find
+$$
+x U_0(x) = {\cos θ \sin θ \over \sin θ} = {\sin 2 θ \over 2 \sin θ} = {U_1(x) \over 2}.
+$$
+Similarly, from trigonometric identities (or rewriting as complex exponentials)we find
+$$
+x U_n(x) = {\cos θ\sin(n+1)θ \over \sin θ} = {\sin n θ + \sin (n+1) θ \over 2 \sin θ} = {U_{n-1}(x) + U_{n+1}(x) \over 2}.
+$$
+
+We can now build these up using the recurrence:
+$$
+\meeq{
+U_0(x) = 1 \ccr
+U_1(x) = 2xU_0(x) = 2x \\
+U_2(x) = 2xU_1(x)-U_0(x) = 4x^2-1 \\
+U_3(x) = 2xU_2(x)-U_1(x) = 8x^3 - 4x \\
+U_4(x) = 2xU_3(x) - U_2(x) = 16x^4-12x^2 + 1 \\
+U_5(x) = 2xU_4(x)-U_3(x) = 32x^5 - 32x^3 + 6x
+}
+$$
+
+**END**
+
+-----
+
+
+We can now show that this family of polynomials are orthogonal with respect to a specific weight, which is often called the _semicircle weight_:
+
+----
+
+
+
+**Problem 4(b)** Prove that $U_n$
+are orthogonal  with respect to
+$$
+∫_{-1}^1 f(x) g(x) \sqrt{1-x^2} \D x.
+$$
+
+
+**SOLUTION**
+
+This follows from a change-of-variables:
+$$
+\begin{align*}
+\int_{-1}^1 U_n(x)U_m(x)\sqrt{1-x^2}{\rm d}x &= \int_0^{π}U_n(\cos θ)U_m(\cos θ)\sin^2 θ{\rm d} θ \\
+&= \int_0^{π}\sin(n+1) θ\sin(m+1) θ{\rm d} θ=\frac{π}{2}δ_{mn}
+\end{align*}
+$$
+where the last step can be shown by substituting $\sin kθ = (\exp(ikθ)-\exp(-ikθ)/(2i)$.
+
+
+
+**END**
+
+-----
+
+Similar to the way that the derivative of a cosine is expressible as a sine, we can relate the derivative of $T_n$ to $U_n$, though where the degree decreases.  Here we prove this result (which is an example of a property satisfied by all families of _classical orthogonal polynomials_):
+
+
+-----
+
+**Problem 5**  Show for $n = 1, 2, …$:
+$$
+T_n'(x) = n U_{n-1}(x).
+$$
+
+
+**SOLUTION**
+
+Note That
+$$
+{\D \over \D x} =  {\D θ \over \D x}  {\D \over \D θ}
+= -{1 \over \sqrt{1-x^2}} {\D \over \D θ} = -{1 \over \sin θ} {\D \over \D θ}.
+$$
+Thus it follows immediately:
+$$
+T_n'(x) = -{1 \over \sin θ} {\D \over \D θ} \cos n θ =
+{n \sin n θ \over \sin θ} {\D \over \D θ} = n U_{n-1}(x).
+$$
+
+
+**END**
+
+------
+
+This connection can be used to differentiate functions, and as seen in the lab it can achieve much higher accuracy than
+divided difference techniques, even close to machine precision accuracy for nice enough functions.
+
+This idea can be taken further and used to solve Ordinary Differential Equations (ODEs) to very high accuracy,
+in something called the [ultraspherical spectral method](https://epubs.siam.org/doi/10.1137/120865458).
